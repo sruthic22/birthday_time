@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Karma's 24th Birthday Celebration!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #daf0fb;
+      font-family: 'Nunito', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Each screen takes full viewport, hidden by default */
+    .screen {
+      display: none;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: #daf0fb;
+      padding: 2rem 1.2rem;
+      text-align: center;
+    }
+    .screen.active { display: block; }
+
+    /* LANDING */
+    #screen-landing {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+    #screen-landing.active { display: flex; }
+
+    .confetti-banner { display: flex; justify-content: center; gap: 5px; font-size: 20px; margin-bottom: 1rem; animation: bounce-row 1.2s ease infinite alternate; }
+    @keyframes bounce-row { from { transform: translateY(0) } to { transform: translateY(-6px) } }
+
+    .landing-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(24px, 7vw, 36px);
+      line-height: 1.4;
+      background: linear-gradient(135deg, #e040a0, #7c3aed, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+    .landing-age {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(44px, 14vw, 64px);
+      background: linear-gradient(135deg, #f59e0b, #ef4444, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .landing-sub { font-size: 14px; color: #7c3aed; font-weight: 700; margin-bottom: 1.8rem; letter-spacing: 1px; }
+
+    .balloons { display: flex; justify-content: center; gap: 16px; margin-bottom: 2rem; }
+    .balloon {
+      width: 42px; height: 54px;
+      border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+      position: relative;
+      animation: float-b 3s ease-in-out infinite;
+    }
+    .balloon::after { content: ''; position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); width: 1.5px; height: 14px; background: #aaa; }
+    .balloon:nth-child(1) { background: #ef4444; animation-delay: 0s; }
+    .balloon:nth-child(2) { background: #f59e0b; animation-delay: 0.4s; }
+    .balloon:nth-child(3) { background: #10b981; animation-delay: 0.8s; }
+    .balloon:nth-child(4) { background: #8b5cf6; animation-delay: 0.2s; }
+    .balloon:nth-child(5) { background: #ec4899; animation-delay: 0.6s; }
+    @keyframes float-b { 0%, 100% { transform: translateY(0) rotate(-3deg) } 50% { transform: translateY(-10px) rotate(3deg) } }
+
+    .party-btn {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 36px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(139,92,246,0.35);
+      -webkit-appearance: none;
+      appearance: none;
+      touch-action: manipulation;
+    }
+    .party-btn:active { opacity: 0.85; transform: scale(0.97); }
+
+    /* WALL */
+    #screen-wall { padding: 1.5rem 1rem; }
+    .wall-header { margin-bottom: 1.2rem; }
+    .wall-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(18px, 5vw, 22px);
+      background: linear-gradient(90deg, #ec4899, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .wall-sub { font-size: 13px; color: #f59e0b; font-weight: 700; margin-top: 4px; }
+
+    .gifts-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      padding-bottom: 1rem;
+    }
+    .gift-card {
+      border-radius: 16px;
+      border: 2.5px solid transparent;
+      background: #fff;
+      cursor: pointer;
+      padding: 18px 10px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 130px;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .gift-card:active { opacity: 0.8; transform: scale(0.96); }
+    .gift-label { font-size: 12px; font-weight: 700; color: #555; text-align: center; line-height: 1.4; }
+    .gc-0 { border-color: #ef4444; background: #fff5f5; }
+    .gc-1 { border-color: #f59e0b; background: #fffbf0; }
+    .gc-2 { border-color: #10b981; background: #f0fdf4; }
+    .gc-3 { border-color: #8b5cf6; background: #faf5ff; }
+    .gc-4 { border-color: #ec4899; background: #fdf2f8; }
+    .gc-5 { border-color: #0ea5e9; background: #f0f9ff; }
+
+    /* OPEN */
+    #screen-open {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem 1.2rem 2rem;
+    }
+    #screen-open.active { display: flex; }
+
+    .open-top-row { display: flex; justify-content: center; gap: 8px; font-size: 18px; margin-bottom: 0.8rem; animation: bounce-row 1s ease infinite alternate; }
+    .open-gift-wrap { cursor: pointer; margin: 0 auto 0.5rem; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    .open-hint { font-size: 14px; font-weight: 700; color: #ec4899; margin-bottom: 1.4rem; }
+
+    .reveal-card {
+      background: #fff;
+      border: 2.5px solid;
+      border-radius: 20px;
+      padding: 1.4rem;
+      margin-bottom: 1rem;
+      display: none;
+      text-align: center;
+      width: 100%;
+      max-width: 320px;
+    }
+    .reveal-card.shown { display: block; }
+    .reveal-emoji { font-size: 44px; margin-bottom: 10px; display: block; }
+    .reveal-activity { font-family: 'Pacifico', cursive; font-size: 20px; margin-bottom: 6px; }
+    .reveal-label { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 14px; }
+
+    .battle-btn {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 26px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      margin-bottom: 6px;
+      display: block;
+      width: 100%;
+      -webkit-appearance: none;
+      touch-action: manipulation;
+    }
+    .battle-btn:active { opacity: 0.85; }
+
+    .back-btn {
+      border: 2.5px solid #8b5cf6;
+      border-radius: 50px;
+      padding: 11px 30px;
+      font-size: 14px;
+      font-weight: 800;
+      background: none;
+      color: #7c3aed;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      display: block;
+      width: 100%;
+      max-width: 320px;
+      -webkit-appearance: none;
+      touch-action: manipulation;
+    }
+    .back-btn:active { background: #8b5cf6; color: #fff; }
+
+    /* BATTLE */
+    #screen-battle { padding: 1.5rem 1rem; }
+    .battle-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(18px, 5vw, 24px);
+      background: linear-gradient(135deg, #ec4899, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+    .battle-sub { font-size: 13px; color: #7c3aed; font-weight: 700; margin-bottom: 1.4rem; }
+
+    .cards-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 1.5rem;
+    }
+
+    .flip-card { width: 120px; height: 165px; perspective: 800px; cursor: pointer; flex-shrink: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    .flip-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(.4,0,.2,1); }
+    .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-front, .flip-card-back {
+      position: absolute; inset: 0; border-radius: 14px;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;
+    }
+    .flip-card-front {
+      background: linear-gradient(145deg, #7c3aed, #ec4899);
+      border: 2.5px solid #8b5cf6;
+      box-shadow: 0 4px 14px rgba(139,92,246,0.28);
+    }
+    .flip-card-front-pattern { font-size: 26px; letter-spacing: 2px; line-height: 1.7; text-align: center; }
+    .flip-card-front-label { font-size: 11px; font-weight: 800; color: #fff; margin-top: 6px; letter-spacing: 1px; text-transform: uppercase; }
+    .flip-card-back {
+      background: #fff;
+      border: 2.5px solid #ec4899;
+      transform: rotateY(180deg);
+      box-shadow: 0 4px 14px rgba(236,72,153,0.18);
+    }
+    .flip-card-back-emoji { font-size: 30px; margin-bottom: 8px; }
+    .flip-card-back-text { font-size: 12px; font-weight: 800; color: #4b5563; text-align: center; line-height: 1.4; }
+    .flip-card-back-tag { font-size: 10px; font-weight: 700; color: #ec4899; margin-top: 6px; }
+
+    .battle-back-btn {
+      border: 2.5px solid #8b5cf6;
+      border-radius: 50px;
+      padding: 11px 32px;
+      font-size: 14px;
+      font-weight: 800;
+      background: none;
+      color: #7c3aed;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      -webkit-appearance: none;
+      touch-action: manipulation;
+    }
+    .battle-back-btn:active { background: #8b5cf6; color: #fff; }
+
+    /* DONE */
+    #screen-done {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+    #screen-done.active { display: flex; }
+
+    .done-balloons { display: flex; justify-content: center; gap: 12px; margin-bottom: 1.5rem; }
+    .done-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(26px, 8vw, 34px);
+      background: linear-gradient(135deg, #ec4899, #8b5cf6, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-msg { font-size: 16px; color: #374151; font-weight: 600; line-height: 1.9; max-width: 360px; margin: 0 auto 1.8rem; }
+    .done-heart { font-size: 28px; display: block; margin-bottom: 4px; animation: float-b 2s ease-in-out infinite; color: #ec4899; }
+    .done-sig {
+      font-family: 'Pacifico', cursive;
+      font-size: 28px;
+      background: linear-gradient(135deg, #ec4899, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* CONFETTI */
+    .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; overflow: hidden; }
+    .cpiece { position: absolute; border-radius: 2px; animation: cfall linear forwards; }
+    @keyframes cfall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+    @keyframes wiggle { 0%, 100% { transform: rotate(0deg) } 25% { transform: rotate(-8deg) scale(1.06) } 75% { transform: rotate(8deg) scale(1.06) } }
+    .wiggling { animation: wiggle 0.55s ease infinite; }
+    @keyframes pop { 0% { transform: scale(1) } 40% { transform: scale(1.18) } 100% { transform: scale(1) } }
+    .popping { animation: pop 0.35s ease; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="confetti-container" id="confetti-container"></div>
+
+  <!-- LANDING -->
+  <div id="screen-landing" class="screen active">
+    <div class="confetti-banner">🎊 🎂 🎉 🎈 🎁 🎊 🎂 🎉</div>
+    <h1 class="landing-title">Karma's</h1>
+    <span class="landing-age">24th</span>
+    <h1 class="landing-title">Birthday Celebration!</h1>
+    <p class="landing-sub">✨ a whole weekend of adventures ✨</p>
+    <div class="balloons">
+      <div class="balloon"></div>
+      <div class="balloon"></div>
+      <div class="balloon"></div>
+      <div class="balloon"></div>
+      <div class="balloon"></div>
+    </div>
+    <button class="party-btn" id="start-btn">🎉 Let's get this party started! 🎉</button>
+  </div>
+
+  <!-- WALL -->
+  <div id="screen-wall" class="screen">
+    <div class="wall-header">
+      <div class="wall-title">Choose your next adventure!</div>
+      <div class="wall-sub" id="wall-sub">🎁 6 surprises waiting for you 🎁</div>
+    </div>
+    <div class="gifts-grid" id="gifts-grid"></div>
+  </div>
+
+  <!-- OPEN -->
+  <div id="screen-open" class="screen">
+    <div class="open-top-row">🎊 🎈 🎉 🎀 🎉 🎈 🎊</div>
+    <div id="open-gift-svg" class="open-gift-wrap"></div>
+    <div class="open-hint" id="open-hint">✨ Tap the gift to open it! ✨</div>
+    <div style="width:100%;max-width:320px;margin:0 auto;">
+      <div class="reveal-card" id="reveal-card">
+        <span class="reveal-emoji" id="reveal-emoji"></span>
+        <div class="reveal-activity" id="reveal-activity"></div>
+        <div class="reveal-label" id="reveal-label"></div>
+        <button class="battle-btn" id="battle-btn" style="display:none;">⚔️ Draw your battle cards!</button>
+      </div>
+      <button class="back-btn" id="back-btn" style="display:none;">← Back to gifts</button>
+    </div>
+  </div>
+
+  <!-- BATTLE -->
+  <div id="screen-battle" class="screen">
+    <div class="battle-title">⚔️ Battle of the Birthday! ⚔️</div>
+    <div class="battle-sub">Flip each card to reveal your challenge — no peeking! 👀</div>
+    <div class="cards-row" id="battle-cards-row"></div>
+    <button class="battle-back-btn" id="battle-back-btn">← Back to gifts</button>
+  </div>
+
+  <!-- DONE -->
+  <div id="screen-done" class="screen">
+    <div class="done-balloons">
+      <div class="balloon" style="width:36px;height:46px;background:#ef4444;animation-delay:0s"></div>
+      <div class="balloon" style="width:36px;height:46px;background:#f59e0b;animation-delay:0.3s"></div>
+      <div class="balloon" style="width:36px;height:46px;background:#10b981;animation-delay:0.6s"></div>
+      <div class="balloon" style="width:36px;height:46px;background:#8b5cf6;animation-delay:0.1s"></div>
+      <div class="balloon" style="width:36px;height:46px;background:#ec4899;animation-delay:0.5s"></div>
+      <div class="balloon" style="width:36px;height:46px;background:#0ea5e9;animation-delay:0.8s"></div>
+    </div>
+    <div class="done-title">Happy Birthday,<br>Karma!</div>
+    <p class="done-msg">There is no one I enjoy celebrating more than you! Here's to many more birthdays and fun activities to come! I love you so much,</p>
+    <span class="done-heart">♥</span>
+    <div class="done-sig">Sruthi</div>
+  </div>
+</div>
+
+<script>
+  var activities = [
+    { name: "Try a New Computer Game", emoji: "🕹️", battle: false },
+    { name: "Escape Room at Home",      emoji: "🔐", battle: false },
+    { name: "Pool Off",                 emoji: "🎱", battle: false },
+    { name: "Couples Who Can't Paint",  emoji: "🎨", battle: false },
+    { name: "Battle of the Birthday",   emoji: "⚔️", battle: true  },
+    { name: "Puzzle Time",              emoji: "🧩", battle: false }
+  ];
+
+  var battleCards = [
+    { name: "Just Dance Showdown",      emoji: "💃" },
+    { name: "BTS Guess the Song",       emoji: "🎵" },
+    { name: "Uno Championship",         emoji: "🃏" },
+    { name: "Photo Recreation Contest", emoji: "📸" },
+    { name: "Heads Up Challenge",       emoji: "🤣" }
+  ];
+
+  var palette = [
+    { box: "#fff5f5", ribbon: "#ef4444", bow: "#dc2626", text: "#ef4444" },
+    { box: "#fffbf0", ribbon: "#f59e0b", bow: "#d97706", text: "#d97706" },
+    { box: "#f0fdf4", ribbon: "#10b981", bow: "#059669", text: "#059669" },
+    { box: "#faf5ff", ribbon: "#8b5cf6", bow: "#7c3aed", text: "#7c3aed" },
+    { box: "#fdf2f8", ribbon: "#ec4899", bow: "#db2777", text: "#db2777" },
+    { box: "#f0f9ff", ribbon: "#0ea5e9", bow: "#0284c7", text: "#0284c7" }
+  ];
+
+  var remaining = [0,1,2,3,4,5];
+  var currentIdx = null;
+  var revealed = false;
+
+  // Wire up buttons via JS (no inline onclick — more reliable on mobile)
+  document.getElementById('start-btn').addEventListener('click', goToWall);
+  document.getElementById('open-gift-svg').addEventListener('click', revealActivity);
+  document.getElementById('battle-btn').addEventListener('click', goToBattle);
+  document.getElementById('back-btn').addEventListener('click', goBackToWall);
+  document.getElementById('battle-back-btn').addEventListener('click', goBackToWall);
+
+  function giftSVG(ci, size, animate) {
+    size = size || 100; animate = animate || false;
+    var c = palette[ci % palette.length];
+    var w = size, h = size, bw = w*0.72, bh = h*0.5, bx = (w-bw)/2, by = h*0.37, lidH = h*0.17;
+    var bc = animate ? 'class="wiggling"' : '';
+    return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg">'
+      +'<rect x="'+bx+'" y="'+by+'" width="'+bw+'" height="'+bh+'" rx="4" fill="'+c.box+'" stroke="'+c.ribbon+'" stroke-width="1.8"/>'
+      +'<rect x="'+bx+'" y="'+(by-lidH)+'" width="'+bw+'" height="'+lidH+'" rx="4" fill="'+c.box+'" stroke="'+c.ribbon+'" stroke-width="1.8"/>'
+      +'<line x1="'+(w/2)+'" y1="'+(by-lidH)+'" x2="'+(w/2)+'" y2="'+(by+bh)+'" stroke="'+c.ribbon+'" stroke-width="3"/>'
+      +'<line x1="'+bx+'" y1="'+by+'" x2="'+(bx+bw)+'" y2="'+by+'" stroke="'+c.ribbon+'" stroke-width="3"/>'
+      +'<g '+bc+'>'
+      +'<ellipse cx="'+(w/2)+'" cy="'+(by-lidH+2)+'" rx="'+(w*0.14)+'" ry="'+(h*0.1)+'" fill="none" stroke="'+c.bow+'" stroke-width="2.2"/>'
+      +'<ellipse cx="'+(w/2)+'" cy="'+(by-lidH+2)+'" rx="'+(w*0.07)+'" ry="'+(h*0.05)+'" fill="'+c.bow+'"/>'
+      +'<path d="M'+(w/2-w*0.14)+' '+(by-lidH+2)+' Q'+(w/2-w*0.22)+' '+(by-lidH-h*0.12)+' '+(w/2-w*0.05)+' '+(by-lidH-h*0.04)+'" fill="none" stroke="'+c.bow+'" stroke-width="2.2" stroke-linecap="round"/>'
+      +'<path d="M'+(w/2+w*0.14)+' '+(by-lidH+2)+' Q'+(w/2+w*0.22)+' '+(by-lidH-h*0.12)+' '+(w/2+w*0.05)+' '+(by-lidH-h*0.04)+'" fill="none" stroke="'+c.bow+'" stroke-width="2.2" stroke-linecap="round"/>'
+      +'</g></svg>';
+  }
+
+  function openedGiftSVG(ci, size) {
+    size = size || 170;
+    var c = palette[ci % palette.length];
+    var w = size, h = size, bw = w*0.72, bh = h*0.46, bx = (w-bw)/2, by = h*0.43, lidH = h*0.17;
+    var sparks = [[w*.15,h*.1],[w*.82,h*.12],[w*.1,h*.45],[w*.88,h*.38],[w*.5,h*.06],[w*.28,h*.22],[w*.72,h*.24]];
+    var ss = '';
+    for (var i = 0; i < sparks.length; i++) {
+      var sx = sparks[i][0], sy = sparks[i][1];
+      ss += '<line x1="'+sx+'" y1="'+(sy-7)+'" x2="'+sx+'" y2="'+(sy+7)+'" stroke="'+c.ribbon+'" stroke-width="2" stroke-linecap="round"/>'
+           +'<line x1="'+(sx-7)+'" y1="'+sy+'" x2="'+(sx+7)+'" y2="'+sy+'" stroke="'+c.ribbon+'" stroke-width="2" stroke-linecap="round"/>'
+           +'<line x1="'+(sx-4)+'" y1="'+(sy-4)+'" x2="'+(sx+4)+'" y2="'+(sy+4)+'" stroke="'+c.bow+'" stroke-width="1.2" stroke-linecap="round"/>'
+           +'<line x1="'+(sx+4)+'" y1="'+(sy-4)+'" x2="'+(sx-4)+'" y2="'+(sy+4)+'" stroke="'+c.bow+'" stroke-width="1.2" stroke-linecap="round"/>';
+    }
+    return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg">'
+      +ss
+      +'<rect x="'+bx+'" y="'+by+'" width="'+bw+'" height="'+bh+'" rx="4" fill="'+c.box+'" stroke="'+c.ribbon+'" stroke-width="1.8"/>'
+      +'<line x1="'+(w/2)+'" y1="'+by+'" x2="'+(w/2)+'" y2="'+(by+bh)+'" stroke="'+c.ribbon+'" stroke-width="3"/>'
+      +'<line x1="'+bx+'" y1="'+by+'" x2="'+(bx+bw)+'" y2="'+by+'" stroke="'+c.ribbon+'" stroke-width="3"/>'
+      +'<rect x="'+(bx-5)+'" y="'+(by-lidH-14)+'" width="'+(bw+10)+'" height="'+lidH+'" rx="4" fill="'+c.box+'" stroke="'+c.ribbon+'" stroke-width="1.8" transform="rotate(-14 '+(w/2)+' '+(by-lidH)+')" />'
+      +'</svg>';
+  }
+
+  function buildWall() {
+    var grid = document.getElementById('gifts-grid');
+    grid.innerHTML = '';
+    for (var i = 0; i < remaining.length; i++) {
+      var idx = remaining[i];
+      var card = document.createElement('div');
+      card.className = 'gift-card gc-' + idx;
+      card.innerHTML = '<div>' + giftSVG(idx, 100) + '</div><div class="gift-label">🎁 Gift #' + (idx+1) + '</div>';
+      (function(id){ card.addEventListener('click', function(){ openGift(id); }); })(idx);
+      grid.appendChild(card);
+    }
+    document.getElementById('wall-sub').textContent = '🎁 ' + remaining.length + ' surprise' + (remaining.length !== 1 ? 's' : '') + ' waiting for you 🎁';
+  }
+
+  function goToWall() {
+    if (remaining.length === 0) { showScreen('screen-done'); bigConfetti(); return; }
+    buildWall();
+    showScreen('screen-wall');
+  }
+
+  function openGift(idx) {
+    currentIdx = idx; revealed = false;
+    var wrap = document.getElementById('open-gift-svg');
+    wrap.innerHTML = giftSVG(idx, 170, true);
+    wrap.style.width = '170px'; wrap.style.height = '170px';
+    document.getElementById('open-hint').textContent = '✨ Tap the gift to open it! ✨';
+    document.getElementById('open-hint').style.display = 'block';
+    document.getElementById('reveal-card').classList.remove('shown');
+    document.getElementById('back-btn').style.display = 'none';
+    document.getElementById('battle-btn').style.display = 'none';
+    showScreen('screen-open');
+  }
+
+  function revealActivity() {
+    if (revealed) return;
+    revealed = true;
+    var idx = currentIdx;
+    var act = activities[idx];
+    var c = palette[idx % palette.length];
+    var wrap = document.getElementById('open-gift-svg');
+    wrap.classList.add('popping');
+    setTimeout(function(){ wrap.classList.remove('popping'); }, 380);
+    wrap.innerHTML = openedGiftSVG(idx, 170);
+    document.getElementById('open-hint').textContent = '🎉 Adventure unlocked! 🎉';
+    document.getElementById('reveal-emoji').textContent = act.emoji;
+    var ra = document.getElementById('reveal-activity');
+    ra.textContent = act.name; ra.style.color = c.text;
+    var rc = document.getElementById('reveal-card');
+    rc.style.borderColor = c.ribbon; rc.style.background = c.box;
+    var rl = document.getElementById('reveal-label');
+    if (act.battle) {
+      rl.textContent = '';
+      document.getElementById('battle-btn').style.display = 'block';
+    } else {
+      rl.textContent = '✨ Your next adventure! ✨'; rl.style.color = c.text;
+      document.getElementById('battle-btn').style.display = 'none';
+    }
+    rc.classList.add('shown');
+    document.getElementById('back-btn').style.display = 'block';
+    burst();
+    remaining = remaining.filter(function(i){ return i !== idx; });
+  }
+
+  function goToBattle() {
+    buildBattleCards();
+    showScreen('screen-battle');
+  }
+
+  function buildBattleCards() {
+    var row = document.getElementById('battle-cards-row');
+    row.innerHTML = '';
+    for (var i = 0; i < battleCards.length; i++) {
+      var bc = battleCards[i];
+      var card = document.createElement('div');
+      card.className = 'flip-card';
+      card.innerHTML =
+        '<div class="flip-card-inner">'
+        +'<div class="flip-card-front">'
+        +'<div class="flip-card-front-pattern">⚔️<br>🎂<br>⚔️</div>'
+        +'<div class="flip-card-front-label">Tap to flip!</div>'
+        +'</div>'
+        +'<div class="flip-card-back">'
+        +'<div class="flip-card-back-emoji">'+bc.emoji+'</div>'
+        +'<div class="flip-card-back-text">'+bc.name+'</div>'
+        +'<div class="flip-card-back-tag">⚔️ Challenge!</div>'
+        +'</div></div>';
+      (function(el){
+        el.addEventListener('click', function(){
+          el.classList.toggle('flipped');
+          if (el.classList.contains('flipped')) burst();
+        });
+      })(card);
+      row.appendChild(card);
+    }
+  }
+
+  function goBackToWall() {
+    if (remaining.length === 0) { showScreen('screen-done'); bigConfetti(); return; }
+    buildWall();
+    showScreen('screen-wall');
+  }
+
+  function showScreen(id) {
+    var screens = document.querySelectorAll('.screen');
+    for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+    document.getElementById(id).classList.add('active');
+    // scroll to top of new screen
+    document.getElementById(id).scrollTop = 0;
+  }
+
+  var cColors = ['#ef4444','#f59e0b','#10b981','#8b5cf6','#ec4899','#0ea5e9','#f97316','#6366f1','#facc15','#34d399'];
+  function burst() {
+    var cont = document.getElementById('confetti-container');
+    for (var i = 0; i < 40; i++) {
+      var p = document.createElement('div');
+      var sz = 5 + Math.random() * 7;
+      p.className = 'cpiece';
+      p.style.cssText = 'left:'+(10+Math.random()*80)+'%;top:0;width:'+sz+'px;height:'+sz+'px;background:'+cColors[Math.floor(Math.random()*cColors.length)]+';animation-duration:'+(0.8+Math.random()*0.7)+'s;animation-delay:'+(Math.random()*0.3)+'s;';
+      cont.appendChild(p);
+      setTimeout(function(){ try { cont.removeChild(p); } catch(e){} }, 1800);
+    }
+  }
+  function bigConfetti() {
+    for (var i = 0; i < 120; i++) {
+      (function(){
+        var p = document.createElement('div');
+        var sz = 5 + Math.random() * 9;
+        p.className = 'cpiece';
+        p.style.cssText = 'left:'+(Math.random()*100)+'%;top:0;width:'+sz+'px;height:'+sz+'px;background:'+cColors[Math.floor(Math.random()*cColors.length)]+';animation-duration:'+(1+Math.random()*1.2)+'s;animation-delay:'+(Math.random()*0.8)+'s;';
+        var cont = document.getElementById('confetti-container');
+        cont.appendChild(p);
+        setTimeout(function(){ try { cont.removeChild(p); } catch(e){} }, 2800);
+      })();
+    }
+  }
+</script>
+</body>
+</html>
